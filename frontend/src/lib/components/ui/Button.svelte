@@ -2,11 +2,12 @@
   import { cn } from "$lib/utils";
   import type { HTMLButtonAttributes } from "svelte/elements";
   import { tv, type VariantProps } from "tailwind-variants";
+  import { Loader2 } from "lucide-svelte";
 
   export { className as class };
 
   const buttonVariants = tv({
-    base: "inline-flex items-center justify-center rounded-md text-sm font-medium whitespace-nowrap ring-offset-lighter transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+    base: "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap ring-offset-lighter transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
     variants: {
       variant: {
         default:
@@ -37,10 +38,13 @@
     class?: string;
     variant?: Variant;
     size?: Size;
+    loading?: boolean;
   } & HTMLButtonAttributes;
 
   export let variant: $$Props["variant"] = "default";
   export let size: $$Props["size"] = "md";
+  export let loading: boolean = false;
+
   let className: $$Props["class"] = undefined;
 </script>
 
@@ -49,6 +53,10 @@
   {...$$restProps}
   on:click
   on:keydown
+  disabled={$$props.disabled || loading}
 >
+  {#if loading}
+    <Loader2 size="16" class="animate-spin" />
+  {/if}
   <slot />
 </button>
