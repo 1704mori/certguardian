@@ -16,16 +16,15 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div on:click|stopPropagation class="flex flex-col gap-4 p-4">
     <div class="font-semibold">
-			<slot name="header" />
-		</div>
+      <slot name="header" />
+    </div>
     <slot />
     <!-- svelte-ignore a11y-autofocus -->
     <div class="flex items-center gap-2 self-end">
-      <slot name="footer">
-        <button class="hover:underline" on:click={() => dialog.close()}>
-          Close
-        </button>
-      </slot>
+      <button class="hover:underline" on:click={() => dialog.close()}>
+        Close
+      </button>
+      <slot name="footer" />
     </div>
   </div>
 </dialog>
