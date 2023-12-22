@@ -14,7 +14,7 @@
   class="max-w-2xl rounded-md border border-neutral-600 dark:border-neutral-800 p-0 bg-white dark:bg-neutral-950 dark:text-neutral-100"
 >
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div on:click|stopPropagation class="flex flex-col gap-4 p-4">
+  <form on:submit|preventDefault class="flex flex-col gap-4 p-4">
     <div class="font-semibold">
       <slot name="header" />
     </div>
@@ -26,7 +26,7 @@
       </button>
       <slot name="footer" />
     </div>
-  </div>
+  </form>
 </dialog>
 
 <style>
