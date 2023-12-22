@@ -50,6 +50,8 @@ func (s *Server) routes() {
 	s.router.NoRoute(func(c *gin.Context) {
 		executeTemplate(c)
 	})
+
+	s.router.Use(corsMiddleware())
 }
 
 func (s *Server) Run(addr string) {
@@ -68,13 +70,11 @@ func executeTemplate(c *gin.Context) {
 	}
 
 	file.Close()
-	log.Info().Msgf("content: %s", string(bytes))
 
 	mashaled, err := json.Marshal(env.Args)
 	if err != nil {
 		log.Panic().Msgf("Failed to marshal config: %v", err)
 	}
-	log.Info().Msgf("config: %s", string(mashaled))
 
 	tmpl, err := template.New(INDEX).Funcs(template.FuncMap{
 		"env": func() template.JS {
