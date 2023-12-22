@@ -2,6 +2,7 @@
   import { theme, type Theme } from "$lib/stores/theme";
   import { onMount } from "svelte";
   import "../app.css";
+  import ThemeSwitch from "$lib/components/ThemeSwitch.svelte";
 
   onMount(() => {
     const _theme = localStorage.getItem("theme");
@@ -11,4 +12,5 @@
   });
 </script>
 
+<ThemeSwitch />
 <slot />

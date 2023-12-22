@@ -1,10 +1,16 @@
 <script lang="ts">
+  import Button from "$lib/components/Button.svelte";
   import Table from "$lib/components/Table.svelte";
-  import ThemeSwitch from "$lib/components/ThemeSwitch.svelte";
 </script>
 
-<ThemeSwitch />
-<div class="w-full">
+<div class="grid grid-cols-1 lg:grid-cols-[minmax(0,15rem)_1fr] gap-5 w-full">
+  <div class="flex flex-col gap-3">
+    <Button>Add site</Button>
+    <div class="flex flex-col gap-2 rounded-md bg-white dark:bg-neutral-950 border border-neutral-800 dark:border-neutral-800 px-2 py-3">
+      <Button>Alerts</Button>
+      <Button>Cron</Button>
+    </div>
+  </div>
   <Table
     columns={[
       {
