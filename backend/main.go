@@ -38,6 +38,11 @@ func main() {
 	router.GET("/_app/*filepath", func(c *gin.Context) {
 		http.FileServer(http.FS(sub)).ServeHTTP(c.Writer, c.Request)
 	})
+
+	router.GET("/theme/*filepath", func(c *gin.Context) {
+		http.FileServer(http.FS(sub)).ServeHTTP(c.Writer, c.Request)
+	})
+
 	router.NoRoute(func(c *gin.Context) {
 		executeTemplate(c)
 	})
