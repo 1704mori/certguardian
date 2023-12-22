@@ -3,6 +3,7 @@
   import { onMount } from "svelte";
   import "../app.css";
   import ThemeSwitch from "$lib/components/ThemeSwitch.svelte";
+  import { Toaster } from "svelte-sonner";
 
   onMount(() => {
     const _theme = localStorage.getItem("theme");
@@ -12,5 +13,6 @@
   });
 </script>
 
+<Toaster theme={$theme} />
 <ThemeSwitch />
 <slot />
