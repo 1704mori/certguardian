@@ -5,8 +5,9 @@ export function domain() {
   const { subscribe, update, set } = writable([]);
 
   async function addDomain(domain: string) {
-    await _addDomain(domain);
+    
     // listDomains();
+    return _addDomain(domain);
   }
 
   return {

@@ -1,4 +1,7 @@
-export async function addDomain(domain: string): Promise<void> {
+type Response<T> = [T, Error | null];
+type ApiResponse = { message: string | any; error: string; };
+
+export async function addDomain(domain: string): Promise<Response<ApiResponse>> {
   const response = await fetch(`http://localhost:7070/v1/`, {
     method: 'POST',
     headers: {
@@ -6,10 +9,13 @@ export async function addDomain(domain: string): Promise<void> {
     },
     body: JSON.stringify({ commonName: domain }),
   });
-  if (!response.ok) {
-    throw new Error(response.statusText);
+
+  const data: ApiResponse = await response.json();
+
+  if (response.status !== 200) {
+    console.error(data);
+    return [null as any, new Error(data.error)];
   }
-  
-  const data = await response.json();
-  return data;
+
+  return [data, null];
 }
