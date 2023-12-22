@@ -15,7 +15,9 @@
 >
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div on:click|stopPropagation class="flex flex-col gap-4 p-4">
-    <slot name="header" />
+    <div class="font-semibold">
+			<slot name="header" />
+		</div>
     <slot />
     <!-- svelte-ignore a11y-autofocus -->
     <div class="flex items-center gap-2 self-end">
