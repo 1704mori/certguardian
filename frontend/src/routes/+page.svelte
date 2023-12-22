@@ -1,5 +1,5 @@
 <script lang="ts">
-  import AddSite from "$lib/components/AddSite.svelte";
+  import AddDomain from "$lib/components/AddDomain.svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import Table from "$lib/components/ui/Table.svelte";
 </script>
@@ -8,7 +8,7 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,15rem)_1fr] gap-5 w-full">
   <div class="flex flex-col gap-3">
-    <AddSite />
+    <AddDomain />
     <div
       class="flex flex-col gap-2 rounded-md bg-white dark:bg-neutral-950 border border-neutral-800 dark:border-neutral-800 px-2 py-3"
     >
