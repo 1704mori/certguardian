@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+  :root {
+	  --page-background: white;
+	  --scrollbar-track: transparent;
+	  /* --scrollbar-thumb: hsl(209 100% 55%); */
+	  /* --scrollbar-thumb-hover: hsl(209 100% 50%); */
+
+	  --scrollbar-thumb: hsl(0 0% 82%);
+	  --scrollbar-thumb-hover: hsl(0 0% 86%);
+
+	  --scrollbar-width: 12px;
+  }
+  /* Default (light) theme */
+
+  /* Dark theme */
+  html.dark {
+	  --page-background: hsl(0 0% 4%);
+
+	  /* --scrollbar-thumb: hsl(209 100% 55%); */
+	  --scrollbar-thumb: hsl(0 0% 14%);
+	  /* --scrollbar-thumb-hover: hsl(209 100% 50%); */
+	  --scrollbar-thumb-hover: hsl(0 0% 17%);
+  }
+}
+
+/* Firefox */
+* {
+	scrollbar-width: thick; /* none | auto  */
+	scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+/* Firefox */
+
+/* Chrome, Edge, Safari */
+*::-webkit-scrollbar {
+	width: var(--scrollbar-width); /* vertical scrollbar */
+	height: var(--scrollbar-width); /* horizontal scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+	background: var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+	background: var(--scrollbar-thumb);
+	border-radius: var(--scrollbar-width);
+	border: calc(var(--scrollbar-width) / 4) solid var(--page-background);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background: var(--scrollbar-thumb-hover);
+}
+/* Chrome, Edge, Safari */
+
+body {
+  min-height: 100vh;
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* background-color: #000000; */
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: normal;
+}
