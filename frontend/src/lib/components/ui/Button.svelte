@@ -1,5 +1,6 @@
 <script lang="ts">
   import { cn } from "$lib/utils";
+  import type { HTMLButtonAttributes } from "svelte/elements";
   import { tv, type VariantProps } from "tailwind-variants";
 
   export { className as class };
@@ -36,7 +37,7 @@
     class?: string;
     variant?: Variant;
     size?: Size;
-  };
+  } & HTMLButtonAttributes;
 
   export let variant: $$Props["variant"] = "default";
   export let size: $$Props["size"] = "md";
