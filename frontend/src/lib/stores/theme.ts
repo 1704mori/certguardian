@@ -1,11 +1,11 @@
 import { writable } from 'svelte/store';
 
-type Theme = 'dark' | 'light' | 'system';
+export type Theme = 'dark' | 'light' | 'system';
 
 function getInitialTheme(): Theme {
   if (typeof window !== 'undefined') {
     const storedTheme = localStorage.getItem('theme');
-    
+
     if (storedTheme && ['dark', 'light', 'system'].includes(storedTheme)) {
       return storedTheme as Theme;
     }
@@ -21,6 +21,8 @@ function createThemeStore() {
     subscribe,
     set: (value: Theme) => {
       localStorage.setItem('theme', value);
+      window.document.documentElement.classList.remove('dark', 'light');
+      window.document.documentElement.classList.add(value);
       set(value);
     },
   };

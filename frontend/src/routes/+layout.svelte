@@ -1,11 +1,14 @@
 <script lang="ts">
-  import { theme } from "$lib/stores/theme";
+  import { theme, type Theme } from "$lib/stores/theme";
+  import { onMount } from "svelte";
   import "../app.css";
-</script>
 
-<svelte:head>
-  <meta name="color-scheme" content={$theme == 'system' ? 'light dark' :
-  $theme}/> <link rel="stylesheet" href={`/theme/${$theme}.css`} />
-</svelte:head>
+  onMount(() => {
+    const _theme = localStorage.getItem("theme");
+    if (theme) {
+      $theme = _theme as Theme;
+    }
+  });
+</script>
 
 <slot />

@@ -30,7 +30,6 @@
   }
 
   body {
-    background-color: var(--color-lightest);
-    color: var(--color-strongest);
+    @apply bg-neutral-50 text-neutral-900 dark:bg-black dark:text-neutral-100;
   }
 }
