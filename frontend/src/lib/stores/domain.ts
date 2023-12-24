@@ -1,17 +1,39 @@
-import { addDomain as _addDomain } from "$lib/api/domain";
+import { addDomain, deleteDomain as apiDeleteDomain, listDomains, type DomainList } from "$lib/api/domain";
 import { writable } from "svelte/store";
 
-export function domain() {
-  const { subscribe, update, set } = writable([]);
+export const domains = writable<DomainList[]>([]);
 
-  async function addDomain(domain: string) {
-    
-    // listDomains();
-    return _addDomain(domain);
+async function initializeDomains() {
+  domains.set([]);
+  const response = await listDomains();
+  if (!response.error) {
+    domains.set(response.message);
+  }
+}
+
+async function addNewDomain(domain: string) {
+  const response = await addDomain(domain);
+  console.log("fe", response)
+  if (!response.error) {
+    await initializeDomains();
   }
 
-  return {
-    subscribe,
-    addDomain,
-  };
+  return response
 }
+
+async function deleteDomain(domain: string) {
+  const response = await apiDeleteDomain(domain);
+  if (!response.error) {
+    await initializeDomains();
+  }
+
+  return response
+}
+
+initializeDomains();
+
+export default {
+  subscribe: domains.subscribe,
+  addNewDomain,
+  deleteDomain,
+};
