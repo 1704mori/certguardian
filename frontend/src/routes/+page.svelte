@@ -6,13 +6,16 @@
   import Button from "$lib/components/ui/Button.svelte";
   import Table from "$lib/components/ui/Table.svelte";
   import { ArrowLeft } from "lucide-svelte";
+  import Actions from "$lib/components/Table/Actions.svelte";
+  import { domains } from "$lib/stores/domain";
+  import Expired from "$lib/components/Table/Expired.svelte";
+  import Valid from "$lib/components/Table/Valid.svelte";
 
   let menu: "certificates" | "alerts" | "cron" | undefined;
 </script>
 
 <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,15rem)_1fr] gap-5 w-full">
   <div class="flex flex-col gap-3">
-    <!-- <AddDomain /> -->
     {#if !menu}
       <AddDomain />
     {:else}
@@ -30,83 +33,59 @@
     </div>
   </div>
   {#if !menu}
-    <Table
-      columns={[
-        {
-          name: "ID",
-          key: "id",
-        },
-        {
-          name: "Name",
-          key: "name",
-        },
-        {
-          name: "Status",
-          key: "status",
-        },
-        {
-          name: "created at",
-          key: "created_at",
-        },
-      ]}
-      totalData={1}
-      data={[
-        {
-          id: 1,
-          name: "test",
-          status: "active",
-          created_at: "2021-08-01 00:00:00",
-        },
-        {
-          id: 2,
-          name: "test",
-          status: "active",
-          created_at: "2021-08-01 00:00:00",
-        },
-        {
-          id: 3,
-          name: "test",
-          status: "active",
-          created_at: "2021-08-01 00:00:00",
-        },
-        {
-          id: 4,
-          name: "test",
-          status: "active",
-          created_at: "2021-08-01 00:00:00",
-        },
-        {
-          id: 5,
-          name: "test",
-          status: "active",
-          created_at: "2021-08-01 00:00:00",
-        },
-        {
-          id: 6,
-          name: "test",
-          status: "active",
-          created_at: "2021-08-01 00:00:00",
-        },
-        {
-          id: 7,
-          name: "test",
-          status: "active",
-          created_at: "2021-08-01 00:00:00",
-        },
-        {
-          id: 8,
-          name: "test",
-          status: "active",
-          created_at: "2021-08-01 00:00:00",
-        },
-        {
-          id: 9,
-          name: "test",
-          status: "active",
-          created_at: "2021-08-01 00:00:00",
-        },
-      ]}
-    />
+    {#if !$domains || !$domains.length}
+      <span>no domains found</span>
+    {:else}
+      <Table
+        label={true}
+        columns={[
+          {
+            key: "commonName",
+            label: "Common Name",
+          },
+          {
+            key: "validFrom",
+            label: "From",
+          },
+          {
+            key: "validTo",
+            label: "To",
+          },
+          {
+            key: "isExpired",
+            label: "Expired",
+          },
+          {
+            key: "issuer",
+            label: "Issuer",
+          },
+          {
+            key: "actions",
+            label: "Actions",
+          },
+        ]}
+        data={$domains.map((data) => ({
+          ...data,
+          isExpired: data.isExpired ? Expired : Valid,
+          validFrom: new Date(data.validFrom).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+          validTo: new Date(data.validTo).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+          actions: {
+            component: Actions,
+            props: {
+              data,
+            },
+          },
+        }))}
+      />
+    {/if}
   {/if}
 
   {#if menu}
