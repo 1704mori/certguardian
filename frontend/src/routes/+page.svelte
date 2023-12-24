@@ -30,69 +30,84 @@
     <div
       class="flex flex-col gap-2 rounded-md bg-white dark:bg-neutral-950 border border-neutral-800 dark:border-neutral-800 px-2 py-3"
     >
-      <Button on:click={() => (menu = "certificates")}>Certificates</Button>
-      <Button on:click={() => (menu = "alerts")}>Alerts</Button>
-      <Button on:click={() => (menu = "cron")}>Cron</Button>
+      <Button
+        active={menu == "certificates"}
+        on:click={() => (menu = "certificates")}
+      >
+        Certificates
+      </Button>
+      <Button active={menu == "alerts"} on:click={() => (menu = "alerts")}>
+        Alerts
+      </Button>
+      <Button active={menu == "cron"} on:click={() => (menu = "cron")}>
+        Cron
+      </Button>
     </div>
-  </div>
-  {#if !menu}
-    {#if !$domains || !$domains.length}
-      <span>no domains found</span>
-    {:else}
-      <Table
-        label={true}
-        columns={[
-          {
-            key: "commonName",
-            label: "Common Name",
-          },
-          {
-            key: "validFrom",
-            label: "From",
-          },
-          {
-            key: "validTo",
-            label: "To",
-          },
-          {
-            key: "isExpired",
-            label: "Expired",
-          },
-          {
-            key: "issuer",
-            label: "Issuer",
-          },
-          {
-            key: "actions",
-            label: "Actions",
-          },
-        ]}
-        data={$domains.map((data) => ({
-          ...data,
-          isExpired: data.isExpired ? Expired : Valid,
-          validFrom: new Date(data.validFrom).toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }),
-          validTo: new Date(data.validTo).toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }),
-          actions: {
-            component: Actions,
-            props: {
-              data,
-            },
-          },
-        }))}
-      />
+    {#if menu == "certificates"}
+      <Button>Add directory</Button>
     {/if}
-  {/if}
+  </div>
+  <div class="min-h-80">
+    {#if !menu}
+      {#if !$domains || !$domains.length}
+        <span
+          class="flex justify-between items-center px-4 py-2 bg-neutral-50 dark:bg-neutral-950 rounded-md"
+          >no domains found</span
+        >
+      {:else}
+        <Table
+          label={true}
+          columns={[
+            {
+              key: "commonName",
+              label: "Common Name",
+            },
+            {
+              key: "validFrom",
+              label: "From",
+            },
+            {
+              key: "validTo",
+              label: "To",
+            },
+            {
+              key: "isExpired",
+              label: "Expired",
+            },
+            {
+              key: "issuer",
+              label: "Issuer",
+            },
+            {
+              key: "actions",
+              label: "Actions",
+            },
+          ]}
+          data={$domains.map((data) => ({
+            ...data,
+            isExpired: data.isExpired ? Expired : Valid,
+            validFrom: new Date(data.validFrom).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
+            validTo: new Date(data.validTo).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
+            actions: {
+              component: Actions,
+              props: {
+                data,
+              },
+            },
+          }))}
+        />
+      {/if}
+    {/if}
 
-  {#if menu}
-    <div class="min-h-80">
+    {#if menu}
       {#if menu == "certificates"}
         <Certificates />
       {:else if menu == "alerts"}
@@ -100,6 +115,6 @@
       {:else if menu == "cron"}
         <Cron />
       {/if}
-    </div>
-  {/if}
+    {/if}
+  </div>
 </div>

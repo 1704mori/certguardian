@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { DomainList } from "$lib/api/domain";
+  import type { CertInfo } from "$lib/api";
   import domain from "$lib/stores/domain";
   import { toast } from "svelte-sonner";
   import Icon from "../ui/icons/Icon.svelte";
   import Trash from "../ui/icons/Trash.svelte";
 
-  export let data: DomainList;
+  export let data: CertInfo;
 
   async function handleDelete() {
     toast.promise(domain.deleteDomain(data.commonName), {
