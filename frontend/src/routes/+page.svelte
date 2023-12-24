@@ -11,6 +11,7 @@
   import Valid from "$lib/components/Table/Valid.svelte";
   import Icon from "$lib/components/ui/icons/Icon.svelte";
   import ArrowLeft from "$lib/components/ui/icons/ArrowLeft.svelte";
+  import AddCertificate from "$lib/components/AddCertificate.svelte";
 
   let menu: "certificates" | "alerts" | "cron" | undefined;
 </script>
@@ -44,7 +45,7 @@
       </Button>
     </div>
     {#if menu == "certificates"}
-      <Button>Add directory</Button>
+      <AddCertificate />
     {/if}
   </div>
   <div class="min-h-80">
