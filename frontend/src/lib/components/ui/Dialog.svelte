@@ -1,10 +1,15 @@
 <script lang="ts">
+  import { cn } from "$lib/utils";
+
   export let showModal = false;
 
   let dialog: HTMLDialogElement;
 
   $: if (dialog && showModal) dialog.showModal();
   $: if (dialog && !showModal) dialog.close();
+
+  let className: string | undefined = undefined;
+  export { className as class };
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
@@ -12,10 +17,13 @@
   bind:this={dialog}
   on:close={() => (showModal = false)}
   on:click|self={() => dialog.close()}
-  class="max-w-2xl rounded-md border border-neutral-600 dark:border-neutral-800 p-0 bg-white dark:bg-neutral-950 dark:text-neutral-100"
+  class={cn(
+    "max-w-2xl rounded-md border border-neutral-600 dark:border-neutral-800 p-0 bg-white dark:bg-neutral-950 dark:text-neutral-100",
+    className
+  )}
 >
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <form on:submit|preventDefault class="flex flex-col gap-4 p-4">
+  <main on:submit|preventDefault class="flex flex-col gap-4 p-4 w-full">
     <div class="font-semibold">
       <slot name="header" />
     </div>
@@ -27,7 +35,7 @@
       </button>
       <slot name="footer" />
     </div>
-  </form>
+  </main>
 </dialog>
 
 <style>
