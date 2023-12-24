@@ -18,6 +18,12 @@
           "text-white bg-sky-600 hover:bg-sky-700 focus-visible:ring-sky-500",
         ghost:
           "bg-transparent border border-sky-600 hover:bg-sky-600/30 focus-visible:ring-sky-500",
+        "active-default":
+          "bg-white dark:bg-black border border-neutral-800 dark:border-neutral-800 border-neutral-500 hover:border-neutral-600 dark:border-neutral-600 dark:hover:border-neutral-700 focus-visible:ring-neutral-500",
+        "active-primary":
+          "text-white bg-sky-700 hover:bg-sky-600 focus-visible:ring-sky-500",
+        "active-ghost":
+          "bg-transparent border border-sky-600 underline hover:bg-sky-600/30 focus-visible:ring-sky-500",
       },
       size: {
         xs: "px-2.5 py-1.5 text-xs",
@@ -40,13 +46,25 @@
     variant?: Variant;
     size?: Size;
     loading?: boolean;
+    active?: boolean;
   } & HTMLButtonAttributes;
 
   export let variant: $$Props["variant"] = "default";
   export let size: $$Props["size"] = "md";
   export let loading: boolean = false;
+  export let active: boolean = false;
 
-  let className: $$Props["class"] = undefined;
+  let tmpVariant = variant;
+
+  function returnActiveVariant(): $$Props["variant"] {
+    if (variant == "default") return "active-default";
+    if (variant == "ghost") return "active-ghost";
+    if (variant == "primary") return "active-primary";
+  }
+
+  $: variant = active ? returnActiveVariant() : tmpVariant;
+
+  let className: $$Props["class"];
 </script>
 
 <button
