@@ -2,7 +2,7 @@ import { base, type ApiResponse, type CertInfo } from ".";
 
 async function addDomain(domain: string): Promise<ApiResponse<string>> {
   return base<string>("domain", {
-    method: "GET",
+    method: "POST",
     body: {
       commonName: domain
     }
