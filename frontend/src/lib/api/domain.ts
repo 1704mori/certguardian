@@ -1,63 +1,27 @@
-import { host } from "$lib/env";
-
-type ApiResponse<T = any> = { message: T; error?: string; };
-export type DomainList = { commonName: string; issuer: string; validFrom: string; validTo: string; isExpired: boolean };
+import { base, type ApiResponse, type CertInfo } from ".";
 
 async function addDomain(domain: string): Promise<ApiResponse<string>> {
-  const response = await fetch(`${host()}/v1/domain`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ commonName: domain }),
+  return base<string>("domain", {
+    method: "GET",
+    body: {
+      commonName: domain
+    }
   });
-
-  const data: ApiResponse<string> = await response.json();
-
-  if (response.status !== 200) {
-    console.error(data);
-    // return [null as any, new Error(data.error)];
-    throw new Error(data.error);
-  }
-
-  return data;
 }
 
-async function listDomains(): Promise<ApiResponse<DomainList[]>> {
-  const response = await fetch(`${host()}/v1/domain`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
-  const data: ApiResponse<DomainList[]> = await response.json();
-
-  if (response.status !== 200) {
-    console.error(data);
-    // return [null as any, new Error(data.error)];
-    throw new Error(data.error);
-  }
-
-  return data;
+async function listDomains(): Promise<ApiResponse<CertInfo[]>> {
+  return base<CertInfo[]>("domain", {
+    method: "GET",
+  })
 }
 
 async function deleteDomain(domain: string): Promise<ApiResponse<string>> {
-  const response = await fetch(`${host()}/v1/domain/${domain}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
-  const data: ApiResponse<string> = await response.json();
-
-  if (response.status !== 200) {
-    console.error(data);
-    throw new Error(data.error);
-  }
-
-  return data
+  return base<string>("domain", {
+    method: "DELETE",
+    query: {
+      domain,
+    }
+  })
 }
 
 export {
