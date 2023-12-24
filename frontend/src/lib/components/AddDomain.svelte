@@ -1,31 +1,24 @@
 <script lang="ts">
+  import domain from "$lib/stores/domain";
   import Button from "./ui/Button.svelte";
   import Dialog from "./ui/Dialog.svelte";
   import Input from "./ui/Input.svelte";
-  import { domain as sDomain } from "$lib/stores/domain";
   import { toast } from "svelte-sonner";
 
   let showModal = false;
-  let domain = "";
+  let _domain = "";
 
   let loading = false;
 
   async function handleSubmit() {
     loading = true;
-    const { addDomain } = sDomain();
-    const [data, err] = await addDomain(domain);
-
-    showModal = false;
-
-    if (err) {
-      console.log(err);
-      toast.error(err.message);
-      loading = false;
-      return;
-    }
+    toast.promise(domain.addNewDomain(_domain), {
+      success: (d) => d.message,
+      error: (e: any) => e.message ?? "Something went wrong",
+    });
 
     loading = false;
-    toast.success(data.message);
+    showModal = false;
   }
 </script>
 
@@ -34,7 +27,7 @@
 
   <div class="flex flex-col w-full max-w-sm gap-1.5">
     <label class="font-medium text-xs uppercase" for="domain">Domain</label>
-    <Input id="domain" placeholder="example.com" bind:value={domain} />
+    <Input id="domain" placeholder="example.com" bind:value={_domain} />
   </div>
 
   <Button type="submit" slot="footer" {loading}>Add</Button>
