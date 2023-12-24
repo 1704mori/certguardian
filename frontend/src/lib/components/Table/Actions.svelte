@@ -1,8 +1,9 @@
 <script lang="ts">
   import type { DomainList } from "$lib/api/domain";
   import domain from "$lib/stores/domain";
-  import { Trash } from "lucide-svelte";
   import { toast } from "svelte-sonner";
+  import Icon from "../ui/icons/Icon.svelte";
+  import Trash from "../ui/icons/Trash.svelte";
 
   export let data: DomainList;
 
@@ -16,6 +17,8 @@
 
 <div class="flex items-center justify-center gap-2">
   <button type="button" on:click={handleDelete}>
-    <Trash />
+    <Icon size="20">
+      <Trash />
+    </Icon>
   </button>
 </div>

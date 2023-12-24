@@ -5,11 +5,12 @@
   import Cron from "$lib/components/Cron.svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import Table from "$lib/components/ui/Table.svelte";
-  import { ArrowLeft } from "lucide-svelte";
   import Actions from "$lib/components/Table/Actions.svelte";
   import { domains } from "$lib/stores/domain";
   import Expired from "$lib/components/Table/Expired.svelte";
   import Valid from "$lib/components/Table/Valid.svelte";
+  import Icon from "$lib/components/ui/icons/Icon.svelte";
+  import ArrowLeft from "$lib/components/ui/icons/ArrowLeft.svelte";
 
   let menu: "certificates" | "alerts" | "cron" | undefined;
 </script>
@@ -20,7 +21,9 @@
       <AddDomain />
     {:else}
       <Button on:click={() => (menu = undefined)}>
-        <ArrowLeft size="16" />
+        <Icon size="16">
+          <ArrowLeft />
+        </Icon>
         Back
       </Button>
     {/if}

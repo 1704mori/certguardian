@@ -2,7 +2,8 @@
   import { cn } from "$lib/utils";
   import type { HTMLButtonAttributes } from "svelte/elements";
   import { tv, type VariantProps } from "tailwind-variants";
-  import { Loader2 } from "lucide-svelte";
+  import Icon from "./icons/Icon.svelte";
+  import Loader from "./icons/Loader.svelte";
 
   export { className as class };
 
@@ -56,7 +57,10 @@
   disabled={$$props.disabled || loading}
 >
   {#if loading}
-    <Loader2 size="16" class="animate-spin" />
+    <!-- <Loader2 size="16" class="animate-spin" /> -->
+    <Icon size="16" class="animate-spin">
+      <Loader />
+    </Icon>
   {/if}
   <slot />
 </button>
