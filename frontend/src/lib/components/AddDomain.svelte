@@ -22,15 +22,15 @@
   }
 </script>
 
-<Dialog bind:showModal on:submit={handleSubmit}>
+<Dialog bind:showModal>
   <h2 slot="header">Add Domain</h2>
 
-  <div class="flex flex-col w-full max-w-sm gap-1.5">
+  <div class="flex flex-col w-full gap-1.5">
     <label class="font-medium text-xs uppercase" for="domain">Domain</label>
     <Input id="domain" placeholder="example.com" bind:value={_domain} />
   </div>
 
-  <Button type="submit" slot="footer" {loading}>Add</Button>
+  <Button slot="footer" {loading} on:click={handleSubmit}>Add</Button>
 </Dialog>
 
 <Button on:click={() => (showModal = true)}>Add Domain</Button>
