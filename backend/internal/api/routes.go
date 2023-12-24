@@ -7,10 +7,24 @@ import (
 )
 
 func setupRoutes(router *gin.RouterGroup, db *db.Database) {
+	domainRepo := repository.NewDomainRepository(db)
 	certRepo := repository.NewCertificateRepository(db)
-	h := NewHandler(db, certRepo)
+	h := NewHandler(db, &repositories{
+		domain: domainRepo,
+		cert:   certRepo,
+	})
 
-	router.GET("/", h.listDomain)
-	router.GET("/:domain", h.findDomain)
-	router.POST("/", h.addDomain)
+	domain := router.Group("/domain")
+	{
+		domain.GET("/", h.listDomain)
+		domain.GET("/:domain", h.findDomain)
+		domain.POST("/", h.addDomain)
+		domain.DELETE("/:domain", h.deleteDomain)
+	}
+
+	// cert := router.Group("/cert")
+	//
+	//	{
+	//		cert.POST("/", h.addCertificate)
+	//	}
 }
