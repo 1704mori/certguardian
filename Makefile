@@ -1,5 +1,5 @@
 .PHONY: dev
-dev: build_front
+dev:
 	@echo "Starting..."
 	cd backend && air
 
