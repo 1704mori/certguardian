@@ -21,11 +21,11 @@ async function listCerts(): Promise<ApiResponse<CertList>> {
   })
 }
 
-async function deleteDir(dir: string): Promise<ApiResponse<string>> {
+async function deleteDir(directory: string): Promise<ApiResponse<string>> {
   return base<string>("cert", {
     method: "DELETE",
-    params: {
-      dir,
+    body: {
+      directory
     }
   })
 }
