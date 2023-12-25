@@ -1,15 +1,44 @@
 <script lang="ts">
-  import { domains } from "$lib/stores/domain";
+  import type { CertList } from "$lib/api/certificates";
+  import { certificates } from "$lib/stores/certificates";
   import Actions from "./Table/Actions.svelte";
   import Expired from "./Table/Expired.svelte";
   import Valid from "./Table/Valid.svelte";
   import Table from "./ui/Table.svelte";
+
+  const processData = (certificates: CertList) => {
+    return Object.values(certificates).flatMap(certsPath =>
+      Object.values(certsPath).map(certInfo => ({
+        ...certInfo,
+        isExpired: certInfo.isExpired ? Expired : Valid,
+        validFrom: new Date(certInfo.validFrom).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+        validTo: new Date(certInfo.validTo).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+        actions: {
+          component: Actions,
+          props: {
+            data: certInfo
+          }
+        }
+      }))
+    );
+  };
+
+  $: processedData = processData($certificates);
+
 </script>
 
-{#if !$domains || !$domains.length}
+{#if !processedData.length}
   <span
     class="flex justify-between items-center px-4 py-2 bg-neutral-50 dark:bg-neutral-950 rounded-md"
-    >no domains found</span
+    >no certificates found</span
   >
 {:else}
   <Table
@@ -40,25 +69,6 @@
         label: "Actions",
       },
     ]}
-    data={$domains.map((data) => ({
-      ...data,
-      isExpired: data.isExpired ? Expired : Valid,
-      validFrom: new Date(data.validFrom).toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
-      validTo: new Date(data.validTo).toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
-      actions: {
-        component: Actions,
-        props: {
-          data,
-        },
-      },
-    }))}
+    data={processedData}
   />
 {/if}
