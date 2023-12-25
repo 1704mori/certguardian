@@ -1,11 +1,9 @@
 <script lang="ts">
-  import domain from "$lib/stores/domain";
+  import certificates from "$lib/stores/certificates";
   import Button from "./ui/Button.svelte";
   import Dialog from "./ui/Dialog.svelte";
   import Input from "./ui/Input.svelte";
   import { toast } from "svelte-sonner";
-  import Icon from "./ui/icons/Icon.svelte";
-  import Trash from "./ui/icons/Trash.svelte";
 
   let _dirs: HTMLSpanElement[] = [];
   let dirs: string[] = [];
@@ -36,9 +34,8 @@
   }
 
   async function handleSubmit() {
-    return;
     loading = true;
-    toast.promise(domain.addNewDomain(dir), {
+    toast.promise(certificates.addNewDir(dirs), {
       success: (d) => d.message,
       error: (e: any) => e.message ?? "Something went wrong",
     });
@@ -112,7 +109,7 @@
     </div>
   {/if}
 
-  <Button type="button" slot="footer" {loading}>Add</Button>
+  <Button type="button" slot="footer" {loading} on:click={handleSubmit}>Add</Button>
 </Dialog>
 
 <Button on:click={() => (showModal = true)}>Add Directory</Button>
