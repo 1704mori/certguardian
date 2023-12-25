@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/1704mori/certguardian/internal/db"
@@ -109,41 +110,38 @@ func (h *Handler) deleteDomain(c *gin.Context) {
 }
 
 // certificates
-// func (h *Handler) addCertificate(c *gin.Context) {
-// 	var certs certificates.Metadata
+func (h *Handler) addCertificate(c *gin.Context) {
+	var certs struct {
+		Directories []string `json:"directories" binding:"required"`
+	}
 
-// 	if err := c.ShouldBindJSON(&certs); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
+	if err := c.ShouldBindJSON(&certs); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-// 	existingDirs, err := h.repos.cert.FindByDirectories(certs.Directories)
+	dirCertificates, err := sslcheck.FindCertificates(certs.Directories)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	fmt.Println(dirCertificates)
 
-// 	if err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-// 		return
-// 	}
+	err = h.repos.cert.Add(dirCertificates)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
-// 	if len(existingDirs.Directories) > 0 {
-// 		// get the dir that is in existingDirs and in certs
-// 		var dirs []string
-// 		for _, dir := range certs.Directories {
-// 			for _, existingDir := range existingDirs.Directories {
-// 				if dir == existingDir {
-// 					dirs = append(dirs, dir)
-// 				}
-// 			}
-// 		}
+	c.JSON(http.StatusOK, gin.H{"message": "Directories added successfully"})
+}
 
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Directories already exists", "directories": dirs})
-// 		return
-// 	}
+func (h *Handler) listCertificates(c *gin.Context) {
+	d, err := h.repos.cert.List()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
-// 	err = h.repos.cert.Add(certs.Directories)
-// 	if err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusOK, gin.H{"message": "Directories added successfully"})
-// }
+	c.JSON(http.StatusOK, gin.H{"message": d[0].Directories})
+}

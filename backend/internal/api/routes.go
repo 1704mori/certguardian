@@ -22,9 +22,10 @@ func setupRoutes(router *gin.RouterGroup, db *db.Database) {
 		domain.DELETE("/:domain", h.deleteDomain)
 	}
 
-	// cert := router.Group("/cert")
-	//
-	//	{
-	//		cert.POST("/", h.addCertificate)
-	//	}
+	cert := router.Group("/cert")
+
+	{
+		cert.GET("/", h.listCertificates)
+		cert.POST("/", h.addCertificate)
+	}
 }
