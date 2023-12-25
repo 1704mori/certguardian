@@ -1,5 +1,6 @@
 <script lang="ts">
   import certificates from "$lib/stores/certificates";
+  import { onMount } from "svelte";
   import Button from "./ui/Button.svelte";
   import Dialog from "./ui/Dialog.svelte";
   import Input from "./ui/Input.svelte";
@@ -25,6 +26,11 @@
   }
 
   function removeDir(index: number) {
+    toast.promise(certificates.deleteDir(dirs[index]), {
+      success: (d) => d.message,
+      error: (e: any) => e.message ?? "Something went wrong",
+    });
+
     dirs = dirs.slice(0, index).concat(dirs.slice(index + 1));
     _dirs = _dirs.slice(0, index).concat(_dirs.slice(index + 1));
   }
@@ -44,6 +50,10 @@
     showModal = false;
     dirs = [];
   }
+
+  onMount(() => {
+    dirs = Object.keys($certificates).map((path) => path);
+  });
 </script>
 
 <Dialog
@@ -110,7 +120,9 @@
     </div>
   {/if}
 
-  <Button type="button" slot="footer" {loading} on:click={handleSubmit}>Add</Button>
+  <Button type="button" slot="footer" {loading} on:click={handleSubmit}
+    >Add</Button
+  >
 </Dialog>
 
-<Button on:click={() => (showModal = true)}>Add Directory</Button>
+<Button on:click={() => (showModal = true)}>Manage Directories</Button>
