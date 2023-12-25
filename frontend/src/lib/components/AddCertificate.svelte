@@ -42,6 +42,7 @@
 
     loading = false;
     showModal = false;
+    dirs = [];
   }
 </script>
 
