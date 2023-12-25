@@ -55,7 +55,7 @@ func (repo *CertificateRepository) FindByDirectories(directories []string) (cert
 }
 
 func (repo *CertificateRepository) List() ([]certificates.Info, error) {
-	var domains []certificates.Info
+	var certs []certificates.Info
 
 	err := repo.DB.DB.View(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte("Certificates"))
@@ -71,11 +71,43 @@ func (repo *CertificateRepository) List() ([]certificates.Info, error) {
 				return err
 			}
 
-			domains = append(domains, domainMeta)
+			certs = append(certs, domainMeta)
 
 			return nil
 		})
 	})
 
-	return domains, err
+	return certs, err
+}
+
+func (repo *CertificateRepository) Delete(directory string) error {
+	return repo.DB.DB.Update(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte("Certificates"))
+		if bucket == nil {
+			return bbolt.ErrBucketNotFound
+		}
+
+		certsDirBytes := bucket.Get([]byte("directories"))
+		if certsDirBytes == nil {
+			return bbolt.ErrInvalid
+		}
+
+		var dirs certificates.DirectoryInfo
+		if err := json.Unmarshal(certsDirBytes, &dirs); err != nil {
+			return err
+		}
+
+		if _, ok := dirs["directories"][directory]; !ok {
+			return nil
+		}
+
+		delete(dirs["directories"], directory)
+
+		updatedBytes, err := json.Marshal(dirs)
+		if err != nil {
+			return err
+		}
+
+		return bucket.Put([]byte("directories"), updatedBytes)
+	})
 }

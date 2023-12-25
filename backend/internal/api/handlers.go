@@ -145,3 +145,22 @@ func (h *Handler) listCertificates(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": d[0].Directories})
 }
+
+func (h *Handler) deleteCertificate(c *gin.Context) {
+	var data struct {
+		Directory string `json:"directory"`
+	}
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error() + "_bindjson"})
+		return
+	}
+
+	err := h.repos.cert.Delete(data.Directory)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Directory deleted"})
+}

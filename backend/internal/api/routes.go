@@ -27,5 +27,6 @@ func setupRoutes(router *gin.RouterGroup, db *db.Database) {
 	{
 		cert.GET("/", h.listCertificates)
 		cert.POST("/", h.addCertificate)
+		cert.DELETE("/", h.deleteCertificate)
 	}
 }
