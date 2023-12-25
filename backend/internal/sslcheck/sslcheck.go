@@ -4,10 +4,13 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/pem"
+	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
+	certTypings "github.com/1704mori/certguardian/internal/certificates"
 	"github.com/1704mori/certguardian/internal/domain"
 )
 
@@ -56,4 +59,55 @@ func FromPEM(filename string) (*domain.Info, error) {
 		IsExpired: time.Now().After(cert.NotAfter),
 	}
 	return info, nil
+}
+
+func FindCertificates(directories []string) (certTypings.Info, error) {
+	directoryCertificates := make(certTypings.DirectoryInfo)
+
+	for _, dir := range directories {
+		certificates, err := searchDirectoryForCertificates(dir)
+		if err != nil {
+			return certTypings.Info{}, err
+		}
+
+		for _, cert := range certificates {
+			info, err := FromPEM(cert)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			if directoryCertificates[dir] == nil {
+				directoryCertificates[dir] = make(map[string]domain.Info)
+			}
+
+			directoryCertificates[dir][cert] = *info
+		}
+	}
+
+	return certTypings.Info{
+		Directories: directoryCertificates,
+	}, nil
+}
+
+func searchDirectoryForCertificates(dir string) ([]string, error) {
+	var certificates []string
+
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() && strings.HasSuffix(info.Name(), "fullchain.pem") {
+			certificates = append(certificates, path)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return certificates, nil
 }
