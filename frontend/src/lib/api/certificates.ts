@@ -1,20 +1,22 @@
 import { base, type ApiResponse, type CertInfo } from ".";
 
 export type CertList = {
-  [dir: string]: CertInfo
+  [dir: string]: {
+    [certPath: string]: CertInfo
+  }
 };
 
-async function addCertDir(dirs: string[]): Promise<ApiResponse<string>> {
+async function addCertDir(directories: string[]): Promise<ApiResponse<string>> {
   return base<string>("cert", {
-    method: "GET",
+    method: "POST",
     body: {
-      dirs,
+      directories,
     }
   });
 }
 
-async function listCerts(): Promise<ApiResponse<CertList[]>> {
-  return base<CertList[]>("cert", {
+async function listCerts(): Promise<ApiResponse<CertList>> {
+  return base<CertList>("cert", {
     method: "GET",
   })
 }
