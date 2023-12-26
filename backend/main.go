@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	env "github.com/1704mori/certguardian/internal"
 	"github.com/1704mori/certguardian/internal/api"
+	"github.com/1704mori/certguardian/internal/cron"
 	"github.com/1704mori/certguardian/internal/db"
 	"github.com/1704mori/certguardian/internal/version"
 
@@ -26,7 +28,11 @@ func main() {
 	log.Info().Msgf("Starting certguardian version %s", version.Version)
 
 	srv := api.NewServer(database)
-	srv.Run(fmt.Sprintf(":%s", env.Args.Port))
+
+	c := cron.NewCron(database)
+	c.CertificateJob(10 * time.Second)
+	c.Start()
 
 	log.Info().Msgf("Listening on port %v", env.Args.Port)
+	srv.Run(fmt.Sprintf(":%s", env.Args.Port))
 }

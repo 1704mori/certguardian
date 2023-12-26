@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/1704mori/certguardian/internal/db"
@@ -125,7 +124,6 @@ func (h *Handler) addCertificate(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println(dirCertificates)
 
 	err = h.repos.cert.Add(dirCertificates)
 	if err != nil {

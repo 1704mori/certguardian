@@ -65,7 +65,7 @@ func FindCertificates(directories []string) (certTypings.Info, error) {
 	directoryCertificates := make(certTypings.DirectoryInfo)
 
 	for _, dir := range directories {
-		certificates, err := searchDirectoryForCertificates(dir)
+		certificates, err := SearchDirectoryForCertificates(dir)
 		if err != nil {
 			return certTypings.Info{}, err
 		}
@@ -90,7 +90,7 @@ func FindCertificates(directories []string) (certTypings.Info, error) {
 	}, nil
 }
 
-func searchDirectoryForCertificates(dir string) ([]string, error) {
+func SearchDirectoryForCertificates(dir string) ([]string, error) {
 	var certificates []string
 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
