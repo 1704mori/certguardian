@@ -6,6 +6,7 @@ export type CertInfo = {
   validFrom: string;
   validTo: string;
   isExpired: boolean
+  isNearExpiry: boolean;
 };
 
 export type ApiResponse<T = any> = { message: T; error?: string; };
