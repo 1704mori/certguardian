@@ -30,7 +30,7 @@ func main() {
 	srv := api.NewServer(database)
 
 	c := cron.NewCron(database)
-	c.CertificateJob(10 * time.Second)
+	c.UpdateCertsAndDomains(10 * time.Second)
 	c.Start()
 
 	log.Info().Msgf("Listening on port %v", env.Args.Port)

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/1704mori/certguardian/internal/db"
+	domainTypings "github.com/1704mori/certguardian/internal/domain"
 	"github.com/1704mori/certguardian/internal/repository"
 	"github.com/1704mori/certguardian/internal/sslcheck"
 	"github.com/go-co-op/gocron/v2"
@@ -39,7 +40,7 @@ func NewCron(db *db.Database) *Cron {
 	}
 }
 
-func (c *Cron) CertificateJob(every time.Duration) {
+func (c *Cron) UpdateCertsAndDomains(every time.Duration) {
 	j, err := c.scheduler.NewJob(
 		gocron.DurationJob(
 			every,
@@ -47,6 +48,7 @@ func (c *Cron) CertificateJob(every time.Duration) {
 		gocron.NewTask(
 			func() {
 				c.checkForCertificates()
+				c.checkForDomains()
 			},
 		),
 	)
@@ -64,13 +66,14 @@ func (c *Cron) checkForCertificates() {
 	log.Info().Msg("[cron]: trying to update certificates")
 	certs, err := c.repos.cert.List()
 
-	if len(certs[0].Directories) == 0 {
-		log.Info().Msg("[cron]: no certificates found to update")
+	if err != nil {
+		log.Error().Msg(err.Error())
 		return
 	}
 
-	if err != nil {
-		panic(err)
+	if len(certs[0].Directories) == 0 {
+		log.Info().Msg("[cron]: no certificates found to update")
+		return
 	}
 
 	for dir := range certs[0].Directories {
@@ -95,4 +98,40 @@ func (c *Cron) checkForCertificates() {
 	}
 
 	log.Info().Msg("[cron]: certificates updated")
+}
+
+func (c *Cron) checkForDomains() {
+	log.Info().Msg("[cron]: trying to update domains")
+	domains, err := c.repos.domain.List()
+
+	if len(domains) == 0 {
+		log.Info().Msg("[cron]: no domains found to update")
+		return
+	}
+
+	if err != nil {
+		panic(err)
+	}
+
+	for _, domain := range domains {
+		certData, err := sslcheck.FromDomain(domain.CommonName)
+		if err != nil {
+			log.Error().Msgf("[cron]: failed to get cert data for %s", domain.CommonName)
+		}
+		log.Info().Msgf("%v", certData)
+
+		err = c.repos.domain.Add(domain.CommonName, domainTypings.Info{
+			CommonName: domain.CommonName,
+			Issuer:     certData.Issuer,
+			ValidFrom:  certData.ValidFrom,
+			ValidTo:    certData.ValidTo,
+			IsExpired:  certData.IsExpired,
+		})
+		if err != nil {
+			log.Error().Msgf("[cron]: failed to update domain %s", domain.CommonName)
+			continue
+		}
+	}
+
+	log.Info().Msg("[cron]: domains updated")
 }
