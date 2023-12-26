@@ -2,7 +2,7 @@
   import AddDomain from "$lib/components/AddDomain.svelte";
   import Alerts from "$lib/components/Alerts.svelte";
   import Certificates from "$lib/components/Certificates.svelte";
-  import Cron from "$lib/components/Cron.svelte";
+  // import Cron from "$lib/components/Cron.svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import Table from "$lib/components/ui/Table.svelte";
   import Actions from "$lib/components/Table/Actions.svelte";
@@ -13,7 +13,7 @@
   import ArrowLeft from "$lib/components/ui/icons/ArrowLeft.svelte";
   import AddCertificate from "$lib/components/AddCertificate.svelte";
 
-  let menu: "certificates" | "alerts" | "cron" | undefined;
+  let menu: "certificates" | "alerts" | undefined;
 </script>
 
 <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,15rem)_1fr] gap-5 w-full">
@@ -37,12 +37,13 @@
       >
         Certificates
       </Button>
-      <Button active={menu == "alerts"} on:click={() => (menu = "alerts")}>
+      <!-- <Cron /> -->
+      <Button disabled active={menu == "alerts"} on:click={() => (menu = "alerts")}>
         Alerts
       </Button>
-      <Button active={menu == "cron"} on:click={() => (menu = "cron")}>
+      <!-- <Button active={menu == "cron"} on:click={() => (menu = "cron")}>
         Cron
-      </Button>
+      </Button> -->
     </div>
     {#if menu == "certificates"}
       <AddCertificate />
@@ -113,8 +114,6 @@
         <Certificates />
       {:else if menu == "alerts"}
         <Alerts />
-      {:else if menu == "cron"}
-        <Cron />
       {/if}
     {/if}
   </div>
