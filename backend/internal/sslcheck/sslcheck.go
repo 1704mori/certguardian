@@ -10,8 +10,10 @@ import (
 	"strings"
 	"time"
 
+	env "github.com/1704mori/certguardian/internal"
 	certTypings "github.com/1704mori/certguardian/internal/certificates"
 	"github.com/1704mori/certguardian/internal/domain"
+	"github.com/1704mori/certguardian/internal/util"
 )
 
 func FromDomain(_domain string) (*domain.Info, error) {
@@ -27,11 +29,21 @@ func FromDomain(_domain string) (*domain.Info, error) {
 	}
 
 	cert := certs[0]
+	now := time.Now()
+	isExpired := now.After(cert.NotAfter)
+
+	ned, err := util.ConvertToDuration(env.Args.NearExpiryThreshold)
+	if err != nil {
+		log.Printf("could not convert NED to duration %v", err)
+		return nil, err
+	}
+
 	info := &domain.Info{
-		Issuer:    strings.Join(cert.Issuer.Organization[:], ","),
-		ValidFrom: cert.NotBefore,
-		ValidTo:   cert.NotAfter,
-		IsExpired: time.Now().After(cert.NotAfter),
+		Issuer:       strings.Join(cert.Issuer.Organization[:], ","),
+		ValidFrom:    cert.NotBefore,
+		ValidTo:      cert.NotAfter,
+		IsExpired:    isExpired,
+		IsNearExpiry: cert.NotAfter.Sub(now) <= ned,
 	}
 	return info, nil
 }
@@ -52,11 +64,21 @@ func FromPEM(filename string) (*domain.Info, error) {
 		return nil, err
 	}
 
+	now := time.Now()
+	isExpired := now.After(cert.NotAfter)
+
+	ned, err := util.ConvertToDuration(env.Args.NearExpiryThreshold)
+	if err != nil {
+		log.Printf("could not convert NED to duration %v", err)
+		return nil, err
+	}
+
 	info := &domain.Info{
-		Issuer:    strings.Join(cert.Issuer.Organization[:], ","),
-		ValidFrom: cert.NotBefore,
-		ValidTo:   cert.NotAfter,
-		IsExpired: time.Now().After(cert.NotAfter),
+		Issuer:       strings.Join(cert.Issuer.Organization[:], ","),
+		ValidFrom:    cert.NotBefore,
+		ValidTo:      cert.NotAfter,
+		IsExpired:    isExpired,
+		IsNearExpiry: cert.NotAfter.Sub(now) <= ned,
 	}
 	return info, nil
 }
