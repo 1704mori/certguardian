@@ -12,6 +12,7 @@
   import Icon from "$lib/components/ui/icons/Icon.svelte";
   import ArrowLeft from "$lib/components/ui/icons/ArrowLeft.svelte";
   import AddCertificate from "$lib/components/AddCertificate.svelte";
+  import NearExpiry from "$lib/components/Table/NearExpiry.svelte";
 
   let menu: "certificates" | "alerts" | undefined;
 </script>
@@ -39,7 +40,11 @@
         Certificates
       </Button>
       <!-- <Cron /> -->
-      <Button disabled active={menu == "alerts"} on:click={() => (menu = "alerts")}>
+      <Button
+        disabled
+        active={menu == "alerts"}
+        on:click={() => (menu = "alerts")}
+      >
         Alerts
       </Button>
       <!-- <Button active={menu == "cron"} on:click={() => (menu = "cron")}>
@@ -86,9 +91,13 @@
               label: "Actions",
             },
           ]}
-          data={$domains.map((data) => ({
+          data={$domains.map(({ isNearExpiry, ...data }) => ({
             ...data,
-            isExpired: data.isExpired ? Expired : Valid,
+            isExpired: data.isExpired
+              ? Expired
+              : isNearExpiry
+                ? NearExpiry
+                : Valid,
             validFrom: new Date(data.validFrom).toLocaleDateString(undefined, {
               year: "numeric",
               month: "long",
