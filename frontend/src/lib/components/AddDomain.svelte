@@ -22,7 +22,7 @@
   }
 </script>
 
-<Dialog bind:showModal>
+<Dialog class="min-w-[32rem] max-w-[32rem]" bind:showModal>
   <h2 slot="header">Add Domain</h2>
 
   <div class="flex flex-col w-full gap-1.5">
