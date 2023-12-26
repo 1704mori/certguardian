@@ -32,6 +32,7 @@
       class="flex flex-col gap-2 rounded-md bg-white dark:bg-neutral-950 border border-neutral-800 dark:border-neutral-800 px-2 py-3"
     >
       <Button
+        disabled
         active={menu == "certificates"}
         on:click={() => (menu = "certificates")}
       >
