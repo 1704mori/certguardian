@@ -41,7 +41,7 @@
 <style>
   dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
+    /* backdrop-filter: blur(5px); */
   }
   dialog[open] {
     animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
