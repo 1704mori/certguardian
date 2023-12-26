@@ -18,7 +18,7 @@ async function listDomains(): Promise<ApiResponse<CertInfo[]>> {
 async function deleteDomain(domain: string): Promise<ApiResponse<string>> {
   return base<string>("domain", {
     method: "DELETE",
-    query: {
+    params: {
       domain,
     }
   })
