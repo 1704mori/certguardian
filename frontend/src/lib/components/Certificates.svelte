@@ -38,7 +38,7 @@
 {#if !processedData.length}
   <span
     class="flex justify-between items-center px-4 py-2 bg-neutral-50 dark:bg-neutral-950 rounded-md"
-    >no certificates found</span
+    >no certificates found. click on 'Manage Directories'.</span
   >
 {:else}
   <Table
