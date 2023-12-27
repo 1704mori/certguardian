@@ -1,4 +1,9 @@
-import { addCertDir, deleteDir as apiDeleteDir, listCerts, type CertList } from "$lib/api/certificates";
+import {
+  addCertDir,
+  deleteDir as apiDeleteDir,
+  listCerts,
+  type CertList,
+} from "$lib/api/certificates";
 import { writable } from "svelte/store";
 
 export const certificates = writable<CertList>();
@@ -17,7 +22,7 @@ async function addNewDir(dirs: string[]) {
     await initializeCerts();
   }
 
-  return response
+  return response;
 }
 
 async function deleteDir(dir: string) {
@@ -26,7 +31,7 @@ async function deleteDir(dir: string) {
     await initializeCerts();
   }
 
-  return response
+  return response;
 }
 
 initializeCerts();

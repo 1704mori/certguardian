@@ -10,7 +10,7 @@ import (
 const (
 	Day   = 24 * time.Hour
 	Week  = 7 * Day
-	Year  = 365 * Day // Simplified, doesn't account for leap years
+	Year  = 365 * Day // Simplified, doesn"t account for leap years
 	Month = Year / 12 // Simplified, assumes each month is roughly 1/12 of a year
 )
 
@@ -20,25 +20,27 @@ func ConvertToDuration(s string) (time.Duration, error) {
 		return 0, fmt.Errorf("invalid format")
 	}
 
-	num, err := strconv.Atoi(s[:len(s)-1])
+	numberPart := s[:len(s)-1]
+	unit := s[len(s)-1]
+
+	number, err := strconv.Atoi(numberPart)
 	if err != nil {
 		return 0, err
 	}
 
 	switch strings.ToLower(s[len(s)-1:]) {
-	case "d":
-		return time.Duration(num) * Day, nil
-	case "y":
-		return time.Duration(num) * Year, nil
 	case "s":
-		return time.Duration(num) * time.Second, nil
-	case "h":
-		return time.Duration(num) * time.Hour, nil
-	case "w":
-		return time.Duration(num) * Week, nil
+		return time.Duration(number) * time.Second, nil
 	case "m":
-		return time.Duration(num) * Month, nil
+		return time.Duration(number) * time.Minute, nil
+	case "h":
+		return time.Duration(number) * time.Hour, nil
+	case "d":
+		return time.Duration(number) * 24 * time.Hour, nil
+	case "y":
+		// Assuming 1 year has 365 days for simplicity
+		return time.Duration(number) * 24 * 365 * time.Hour, nil
 	default:
-		return 0, fmt.Errorf("unknown time unit")
+		return 0, fmt.Errorf("invalid time unit: %q", unit)
 	}
 }

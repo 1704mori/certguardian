@@ -1,11 +1,14 @@
 import type { CertInfo } from "$lib/api";
-import { addDomain, deleteDomain as apiDeleteDomain, listDomains } from "$lib/api/domain";
+import {
+  addDomain,
+  deleteDomain as apiDeleteDomain,
+  listDomains,
+} from "$lib/api/domain";
 import { writable } from "svelte/store";
 
 export const domains = writable<CertInfo[]>([]);
 
 async function initializeDomains() {
-  domains.set([]);
   const response = await listDomains();
   if (!response.error) {
     domains.set(response.message);
@@ -18,7 +21,7 @@ async function addNewDomain(domain: string) {
     await initializeDomains();
   }
 
-  return response
+  return response;
 }
 
 async function deleteDomain(domain: string) {
@@ -27,7 +30,7 @@ async function deleteDomain(domain: string) {
     await initializeDomains();
   }
 
-  return response
+  return response;
 }
 
 initializeDomains();

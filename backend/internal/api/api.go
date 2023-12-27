@@ -16,7 +16,7 @@ import (
 )
 
 const FRONTEND_DIR = "../frontend"
-const INDEX = FRONTEND_DIR + "/build/index.html"
+const INDEX = "/build/index.html"
 
 type Server struct {
 	db     *db.Database
@@ -34,11 +34,21 @@ func NewServer(db *db.Database) *Server {
 	return s
 }
 
+func buildDir() string {
+	path, _ := os.Getwd()
+	fullDir := path + FRONTEND_DIR
+	if os.Getenv("GIN_MODE") == "release" {
+		fullDir = path + "app/frontend"
+	}
+
+	return fullDir
+}
+
 func (s *Server) routes() {
 	v1 := s.router.Group("/v1")
 	setupRoutes(v1, s.db)
 
-	sub, err := fs.Sub(os.DirFS(FRONTEND_DIR), "build")
+	sub, err := fs.Sub(os.DirFS(buildDir()), "build")
 	if err != nil {
 		panic(err)
 	}
@@ -59,7 +69,7 @@ func (s *Server) Run(addr string) {
 }
 
 func executeTemplate(c *gin.Context) {
-	file, err := os.Open(INDEX)
+	file, err := os.Open(buildDir() + "/build/index.html")
 	if err != nil {
 		log.Panic().Msgf("Failed to open index.html: %v", err)
 	}
@@ -76,7 +86,7 @@ func executeTemplate(c *gin.Context) {
 		log.Panic().Msgf("Failed to marshal config: %v", err)
 	}
 
-	tmpl, err := template.New(INDEX).Funcs(template.FuncMap{
+	tmpl, err := template.New(buildDir() + "/build/index.html").Funcs(template.FuncMap{
 		"env": func() template.JS {
 			return template.JS(fmt.Sprintf(`{"env": %s}`, string(mashaled)))
 		},

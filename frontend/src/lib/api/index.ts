@@ -5,11 +5,11 @@ export type CertInfo = {
   issuer: string;
   validFrom: string;
   validTo: string;
-  isExpired: boolean
+  isExpired: boolean;
   isNearExpiry: boolean;
 };
 
-export type ApiResponse<T = any> = { message: T; error?: string; };
+export type ApiResponse<T = any> = { message: T; error?: string };
 
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 type Endpoint = "domain" | "cert";
@@ -19,10 +19,11 @@ type Params = {
   body?: Record<string, any>;
   params?: Record<string, any>;
   query?: Record<string, any>;
-}
+};
 
-export async function base<T = any>(endpoint: Endpoint, { body, method, params, query }:
-  Params
+export async function base<T = any>(
+  endpoint: Endpoint,
+  { body, method, params, query }: Params,
 ): Promise<ApiResponse<T>> {
   let url = new URL(`${host()}/v1/${endpoint}`);
 
@@ -31,18 +32,23 @@ export async function base<T = any>(endpoint: Endpoint, { body, method, params, 
   }
 
   for (const param in params) {
-    url.pathname += `/${params[param]}`
+    url.pathname += `/${params[param]}`;
   }
-
-  console.log("url %s", url);
 
   const response = await fetch(url, {
     method,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
-  });
+  }).catch(() => null);
+
+  if (!response) {
+    console.log("skipping error");
+    return {
+      message: [] as T,
+    };
+  }
 
   const data: ApiResponse<T> = await response.json();
 
