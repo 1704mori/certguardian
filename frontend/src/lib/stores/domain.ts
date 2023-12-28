@@ -9,6 +9,7 @@ import { writable } from "svelte/store";
 export const domains = writable<CertInfo[]>([]);
 
 async function initializeDomains() {
+  domains.set([]);
   const response = await listDomains();
   if (!response.error) {
     domains.set(response.message);
