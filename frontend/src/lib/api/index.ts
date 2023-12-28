@@ -1,4 +1,4 @@
-import { _env, host } from "$lib/env";
+import { _env } from "$lib/env";
 
 export type CertInfo = {
   commonName: string;
