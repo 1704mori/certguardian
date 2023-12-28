@@ -13,12 +13,10 @@ var Args struct {
 }
 
 func BuildEnv() {
-	// Mapa para controlar as variáveis já adicionadas
 	addedVars := make(map[string]bool)
 
 	var envContent strings.Builder
 
-	// Adiciona variáveis da struct Args se não estiverem no ambiente
 	addVar := func(key, value string) {
 		if _, exists := addedVars[key]; !exists {
 			addedVars[key] = true
@@ -26,24 +24,20 @@ func BuildEnv() {
 		}
 	}
 
-	// Variáveis de Args
 	addVar("PUBLIC_PORT", Args.Port)
 	addVar("PUBLIC_CRON_INTERVAL", Args.CronInterval)
 	addVar("PUBLIC_NEAR_EXPIRY_THRESHOLD", Args.NearExpiryThreshold)
 
 	fmt.Println("----------- content", envContent.String())
 
-	// Variáveis de ambiente existentes
 	for _, e := range os.Environ() {
 		pair := strings.SplitN(e, "=", 2)
 		if len(pair) == 2 {
-			// Prefixa as variáveis de ambiente com 'PUBLIC_' e evita duplicatas
 			addVar("PUBLIC_"+pair[0], pair[1])
 		}
 	}
 	fmt.Println("----------- content after", envContent.String())
 
-	// Escreve no arquivo .env
 	err := os.WriteFile("/build/frontend/.env", []byte(envContent.String()), 0644)
 	if err != nil {
 		fmt.Println(err.Error())

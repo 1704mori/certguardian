@@ -34,13 +34,10 @@ func main() {
 	cmd := exec.Command("npm", "run", "build")
 	cmd.Dir = "/build/frontend"
 
-	stdout, err := cmd.CombinedOutput()
-
+	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Printf("Error: %s\n", err.Error())
 	}
-
-	fmt.Println(string(stdout))
 
 	srv := api.NewServer(database)
 
