@@ -81,13 +81,13 @@
     {#each data as item, index (item.id)}
       <div
         class={`bg-neutral-50 dark:bg-neutral-950 px-1 py-1.5 shadow-md flex flex-wrap ${
-          generateGridColumns ? "grid" : ""
+          generateGridColumns ? "[@media(min-width:840px)]:grid" : ""
         } sm:gap-4`}
         style={`grid-template-columns: ${generateGridColumns.join(" ")}`}
       >
         {#each columns as column, columnIndex (column.key)}
           <div
-            class={`w-full p-2 my-auto ${
+            class={`w-full p-2 mt-auto max-md:[&:not(:last-child)]:border-b border-neutral-200 dark:border-neutral-900 self-center truncate ${
               isHTMLElement(item[column.key]) ? "self-center truncate" : ""
             }`}
           >

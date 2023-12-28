@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"time"
 
@@ -29,14 +30,16 @@ func main() {
 	defer database.Close()
 
 	log.Info().Msgf("Starting certguardian version %s", version.Version)
+	if os.Getenv("GIN_MODE") == "release" {
 
-	env.BuildEnv()
-	cmd := exec.Command("npm", "run", "build")
-	cmd.Dir = "/build/frontend"
+		env.BuildEnv()
+		cmd := exec.Command("npm", "run", "build")
+		cmd.Dir = "/build/frontend"
 
-	_, err = cmd.CombinedOutput()
-	if err != nil {
-		fmt.Printf("Error: %s\n", err.Error())
+		_, err = cmd.CombinedOutput()
+		if err != nil {
+			fmt.Printf("Error: %s\n", err.Error())
+		}
 	}
 
 	srv := api.NewServer(database)

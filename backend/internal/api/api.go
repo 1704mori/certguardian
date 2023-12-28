@@ -15,7 +15,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-const FRONTEND_DIR = "../frontend"
+const FRONTEND_DIR = "/../frontend"
 const INDEX = "/build/index.html"
 
 type Server struct {
