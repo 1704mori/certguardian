@@ -1,26 +1,16 @@
+import * as env from "$env/static/public";
+
 type Config = {
-  port: number;
-}
+  PUBLIC_PORT: number;
+  PUBLIC_CRON_INTERVAL: string;
+  PUBLIC_NEAR_EXPIRY_THRESHOLD: string;
+};
 
-export function env() {
-  // const text = document.querySelector("script#config__json")?.textContent || "{}";
+export function _env() {
+  const config: Config = {
+    ...env,
+    PUBLIC_PORT: parseInt(env.PUBLIC_PORT),
+  };
 
-  // const pageConfig = JSON.parse(text);
-
-  // const config: Config = {
-  //   ...pageConfig.env,
-  // };
-
-  // return Object.freeze(config);
-  return Object.freeze({
-    port: 7070
-  });
-}
-
-/**
- * 
- * @returns http://localhost:[port]
- */
-export function host() {
-  return `http://localhost:${env().port}`
+  return Object.freeze(config);
 }

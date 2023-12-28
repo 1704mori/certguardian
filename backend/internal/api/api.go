@@ -38,7 +38,7 @@ func buildDir() string {
 	path, _ := os.Getwd()
 	fullDir := path + FRONTEND_DIR
 	if os.Getenv("GIN_MODE") == "release" {
-		fullDir = path + "app/frontend"
+		fullDir = path + "/frontend"
 	}
 
 	return fullDir
@@ -109,7 +109,7 @@ func executeTemplate(c *gin.Context) {
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
 		if c.Request.Method == "OPTIONS" {

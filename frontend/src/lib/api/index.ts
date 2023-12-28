@@ -1,4 +1,4 @@
-import { host } from "$lib/env";
+import { _env, host } from "$lib/env";
 
 export type CertInfo = {
   commonName: string;
@@ -25,14 +25,10 @@ export async function base<T = any>(
   endpoint: Endpoint,
   { body, method, params, query }: Params,
 ): Promise<ApiResponse<T>> {
-  let url = new URL(`${host()}/v1/${endpoint}`);
-
-  for (const q in query) {
-    url.searchParams.set(q, query[q]);
-  }
+  let url = `v1/${endpoint}`;
 
   for (const param in params) {
-    url.pathname += `/${params[param]}`;
+    url += `/${params[param]}`;
   }
 
   const response = await fetch(url, {

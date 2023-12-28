@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os/exec"
 	"time"
 
 	env "github.com/1704mori/certguardian/internal"
@@ -28,6 +29,18 @@ func main() {
 	defer database.Close()
 
 	log.Info().Msgf("Starting certguardian version %s", version.Version)
+
+	env.BuildEnv()
+	cmd := exec.Command("npm", "run", "build")
+	cmd.Dir = "/build/frontend"
+
+	stdout, err := cmd.CombinedOutput()
+
+	if err != nil {
+		fmt.Printf("Error: %s\n", err.Error())
+	}
+
+	fmt.Println(string(stdout))
 
 	srv := api.NewServer(database)
 
